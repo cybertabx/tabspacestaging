@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0c0e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TabSpace — by CyberTabX</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  margin:0; padding:0; box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+:root {
+  --navy:#1a1a2e; --blue:#4f8ef7; --teal:#0ff4c6; --dark:#0c0e1a;
+  --bar-h:72px; --hub-w:58px;
+  --spring:cubic-bezier(0.34,1.4,0.64,1);
+  --out:cubic-bezier(0.4,0,0.2,1);
+}
+html,body { width:100%; height:100%; overflow:hidden; background:var(--dark); font-family:'Inter',sans-serif; color:#fff; }
+
+/* ══ SPLASH ══ */
+#splash {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--dark);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+  transition:opacity 0.5s ease, transform 0.5s ease;
+}
+#splash.out { opacity:0; transform:scale(1.04); pointer-events:none; }
+.splash-portal { opacity:0; transform:scale(0.82); animation:portalIn 0.55s 0.1s var(--spring) forwards; }
+@keyframes portalIn { to { opacity:1; transform:scale(1); } }
+.splash-wordmark { font-family:'Inter',sans-serif; font-size:22px; font-weight:900; letter-spacing:-1px; opacity:0; transform:translateY(6px); animation:wordIn 0.4s 0.5s var(--out) forwards; }
+.splash-wordmark span { color:var(--teal); }
+.splash-tag { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.3); opacity:0; animation:wordIn 0.4s 0.65s var(--out) forwards; }
+@keyframes wordIn { to { opacity:1; transform:translateY(0); } }
+
+/* ══ SHELL ══ */
+#shell { width:100%; height:100%; display:flex; flex-direction:column; overflow:hidden; position:relative; }
+#screens { flex:1; position:relative; overflow:hidden; min-height:0; }
+.screen { position:absolute; inset:0; display:flex; flex-direction:column; transition:opacity 0.26s var(--out), transform 0.26s var(--out); }
+.screen.hidden { opacity:0; pointer-events:none; transform:scale(0.97) translateY(4px); }
+
+/* ══ INVITE LANDING ══ */
+#s-invite { background:var(--navy); align-items:center; justify-content:center; padding:32px 28px; text-align:center; }
+#s-invite::before { content:''; position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 70% 45% at 20% 10%, rgba(79,142,247,0.2) 0%, transparent 55%), radial-gradient(ellipse 55% 55% at 80% 85%, rgba(15,244,198,0.12) 0%, transparent 55%); }
+.invite-back { position:absolute; top:20px; left:20px; z-index:2; width:36px; height:36px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:rgba(255,255,255,0.5); transition:background 0.15s ease; }
+.invite-back:active { background:rgba(255,255,255,0.1); }
+.invite-inner { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; }
+.invite-logo { display:flex; flex-direction:column; align-items:center; gap:5px; margin-bottom:20px; }
+.invite-wordmark { font-family:'Inter',sans-serif; font-size:20px; font-weight:900; letter-spacing:-1px; margin-top:8px; }
+.invite-wordmark span { color:var(--teal); }
+.invite-from { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:6px; }
+.invite-heading { font-family:'Inter',sans-serif; font-size:26px; font-weight:900; letter-spacing:-1px; line-height:1.15; margin-bottom:10px; }
+.invite-heading em { color:var(--teal); font-style:normal; }
+.invite-sub { font-size:13px; color:rgba(255,255,255,0.45); line-height:1.6; margin-bottom:32px; }
+.invite-products { display:flex; gap:10px; margin-bottom:32px; }
+.invite-prod { display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:14px; padding:12px 14px; }
+.invite-prod svg { width:32px; height:32px; border-radius:8px; }
+.invite-prod-name { font-size:10px; font-weight:600; color:rgba(255,255,255,0.5); }
+.invite-cta { width:100%; padding:14px; background:linear-gradient(135deg,var(--blue),var(--teal)); border:none; border-radius:14px; font-family:'Inter',sans-serif; font-size:15px; font-weight:700; line-height:1; color:var(--dark); cursor:pointer; transition:transform 0.15s ease, opacity 0.15s ease; margin-bottom:12px; }
+.invite-cta:active { transform:scale(0.97); opacity:0.9; }
+.invite-explore { font-size:12px; color:rgba(255,255,255,0.35); cursor:pointer; padding:8px; transition:color 0.15s ease; }
+.invite-explore:active { color:var(--teal); }
+
+/* ══ HOME ══ */
+#s-home { background:var(--navy); }
+#s-home::before { content:''; position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 70% 45% at 10% 5%, rgba(79,142,247,0.2) 0%, transparent 55%), radial-gradient(ellipse 55% 55% at 90% 90%, rgba(15,244,198,0.12) 0%, transparent 55%); }
+
+/* TabSpace — platform header bar */
+.tabspace-header {
+  position:absolute; top:0; left:0; right:0;
+  height:44px;
+  display:flex; align-items:center;
+  padding:0 16px;
+  z-index:2;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  background:rgba(26,26,46,0.7);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.tabspace-header-icon { width:26px; height:26px; flex-shrink:0; margin-right:9px; cursor:pointer; }
+.tabspace-header-icon svg { width:26px; height:26px; display:block; }
+.tabspace-header-name {
+  font-family:'Inter',sans-serif;
+  font-size:14px; font-weight:900;
+  letter-spacing:-0.3px; color:#fff;
+}
+.tabspace-header-name span { color:var(--teal); }
+.tabspace-header-sub {
+  font-size:9px; font-weight:600;
+  letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(255,255,255,0.25);
+  margin-left:auto;
+}
+/* Remove old tabspace-id styles */
+.tabspace-id { display:none; }
+
+.home-body { flex:1; overflow-y:auto; padding:52px 24px 16px; position:relative; z-index:1; }
+.brand-bars { display:flex; flex-direction:column; gap:5px; margin-bottom:8px; }
+.bb { height:7px; border-radius:4px; }
+.bb:nth-child(1){ width:36px; background:var(--blue); }
+.bb:nth-child(2){ width:27px; background:linear-gradient(90deg,var(--blue),var(--teal)); }
+.bb:nth-child(3){ width:16px; background:var(--teal); }
+.brand-name { font-family:'Inter',sans-serif; font-size:20px; font-weight:900; letter-spacing:-1px; margin-top:7px; }
+.brand-name span { color:var(--teal); }
+.brand-tag { font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.28); margin-top:3px; }
+.home-heading { font-family:'Inter',sans-serif; font-size:26px; font-weight:900; letter-spacing:-1px; line-height:1.15; margin:22px 0 20px; }
+.home-heading em { color:var(--teal); font-style:normal; }
+
+/* Section labels */
+.sec-label { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:12px; }
+.sec-label-biz { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:12px; margin-top:28px; }
+
+/* App grid */
+/* App grid */
+.app-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+.app-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:18px; padding:17px 13px 16px; cursor:pointer; position:relative; transition:transform 0.14s ease, border-color 0.2s ease; display:flex; flex-direction:column; }
+.app-card::after { content:''; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(135deg,rgba(255,255,255,0.03),transparent); pointer-events:none; }
+.app-card.live:active { transform:scale(0.93); }
+.app-card.soon { opacity:1; cursor:pointer; }
+.app-card.soon:active { transform:scale(0.95); }
+.card-badge { position:absolute; top:9px; right:9px; font-size:7px; font-weight:700; letter-spacing:1px; padding:2px 6px; border-radius:20px; }
+.b-live { color:var(--teal); background:rgba(15,244,198,0.1); border:1px solid rgba(15,244,198,0.22); }
+.b-soon { color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); }
+.card-logo { width:40px; height:40px; min-height:40px; display:flex; align-items:center; justify-content:center; margin-bottom:11px; flex-shrink:0; }
+.card-logo svg { width:40px; height:40px; display:block; border-radius:11px; }
+.card-name { font-family:'Inter',sans-serif; font-size:13px; font-weight:700; padding-right:36px; }
+.card-desc { font-size:10px; color:rgba(255,255,255,0.3); margin-top:3px; line-height:1.5; }
+
+/* Install card — no dismiss, smart hide */
+.install-card { margin-top:16px; background:rgba(15,244,198,0.06); border:1px solid rgba(15,244,198,0.18); border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background 0.15s ease; }
+.install-card:active { background:rgba(15,244,198,0.1); }
+.install-card.hidden { display:none; }
+.install-icon { width:36px; height:36px; border-radius:10px; background:rgba(15,244,198,0.12); border:1px solid rgba(15,244,198,0.25); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.install-text { flex:1; }
+.install-title { font-family:'Inter',sans-serif; font-size:12px; font-weight:700; color:#fff; }
+.install-sub { font-size:10px; color:rgba(255,255,255,0.4); margin-top:2px; }
+.install-arrow { font-size:14px; color:var(--teal); }
+
+/* Social footer */
+.home-footer { margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06); }
+.footer-actions { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+.invite-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:10px 14px; background:rgba(79,142,247,0.1); border:1px solid rgba(79,142,247,0.22); border-radius:12px; cursor:pointer; transition:background 0.15s ease; }
+.invite-btn:active { background:rgba(79,142,247,0.18); }
+.invite-btn-txt { font-family:'Inter',sans-serif; font-size:11px; font-weight:700; color:var(--blue); }
+.feedback-btn { display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:12px; cursor:pointer; transition:background 0.15s ease; }
+.feedback-btn:active { background:rgba(255,255,255,0.08); }
+.feedback-btn-txt { font-family:'Inter',sans-serif; font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); }
+.social-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; }
+.social-link { width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; cursor:pointer; text-decoration:none; transition:background 0.15s ease, border-color 0.15s ease; }
+.social-link:active { background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.15); }
+.social-link svg { width:20px; height:20px; }
+.footer-copy { text-align:center; font-size:9px; color:rgba(255,255,255,0.15); letter-spacing:0.5px; padding-bottom:4px; }
+
+/* ══ TABFIN ══ */
+#s-tabfin { background:#0a0c15; }
+.tf-head { padding:50px 20px 12px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.tf-logo { display:flex; flex-direction:column; gap:3px; }
+.tf-logo div { height:4px; border-radius:2px; background:var(--blue); }
+.tf-logo div:nth-child(1){ width:20px; }
+.tf-logo div:nth-child(2){ width:14px; background:linear-gradient(90deg,var(--blue),var(--teal)); }
+.tf-logo div:nth-child(3){ width:8px; background:var(--teal); }
+.tf-title { font-family:'Inter',sans-serif; font-size:15px; font-weight:700; }
+.tf-sub { font-size:10px; color:rgba(255,255,255,0.28); margin-left:auto; }
+.tf-body { flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:10px; }
+.fin-hero { background:linear-gradient(130deg,rgba(79,142,247,0.17),rgba(15,244,198,0.08)); border:1px solid rgba(79,142,247,0.22); border-radius:16px; padding:18px; }
+.fl { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.32); }
+.fv { font-family:'Inter',sans-serif; font-size:28px; font-weight:900; letter-spacing:-1.5px; margin-top:3px; }
+.fd { font-size:11px; color:var(--teal); margin-top:3px; }
+.fin-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.fin-tile { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:13px; padding:12px; }
+.ftl { font-size:9px; color:rgba(255,255,255,0.28); }
+.ftv { font-family:'Inter',sans-serif; font-size:18px; font-weight:700; margin-top:2px; }
+.g{color:var(--teal);} .r{color:#ff6b6b;} .b{color:var(--blue);}
+
+/* ══ TABNEWS ══ */
+#s-tabnews { background:#0b0d17; }
+.tn-head { padding:50px 18px 12px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:9px; flex-shrink:0; }
+.ecg { width:32px; height:20px; }
+.tn-title { font-family:'Inter',sans-serif; font-size:16px; font-weight:900; }
+.tn-t{color:#fff;} .tn-n{color:var(--teal);}
+.live-dot { width:7px; height:7px; border-radius:50%; background:#ff3d3d; margin-left:auto; box-shadow:0 0 6px rgba(255,61,61,0.5); animation:pip 1.4s infinite; }
+@keyframes pip{0%,100%{opacity:1}50%{opacity:0.2}}
+.tn-body { flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:9px; }
+.nc { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:13px; padding:13px; }
+.nc-cat { font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--blue); margin-bottom:5px; }
+.nc-hl { font-size:12px; font-weight:500; line-height:1.45; margin-bottom:6px; }
+.nc-ins { font-size:10px; color:var(--teal); line-height:1.5; margin-bottom:7px; }
+.nc-foot { display:flex; justify-content:space-between; }
+.nc-time { font-size:10px; color:rgba(255,255,255,0.22); }
+.nc-read { font-size:10px; font-weight:600; color:var(--blue); }
+
+/* ══ SWITCHER BACKDROP ══ */
+#sw-backdrop { position:absolute; inset:0; z-index:40; background:rgba(0,0,0,0); pointer-events:none; transition:background 0.25s ease; }
+#sw-backdrop.on { background:rgba(0,0,0,0.52); pointer-events:all; }
+
+/* ══ SWITCHER PANEL ══ */
+#sw-panel { position:absolute; left:10px; bottom:8px; z-index:45; transform-origin:bottom left; transform:scale(0.88) translateY(10px); opacity:0; pointer-events:none; transition:transform 0.3s var(--spring), opacity 0.22s ease; }
+#sw-panel.on { transform:scale(1) translateY(0); opacity:1; pointer-events:all; }
+.sw-card { background:rgba(10,12,22,0.97); border:1px solid rgba(255,255,255,0.11); border-radius:20px; overflow:hidden; backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px); box-shadow:0 -16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03), 0 0 24px rgba(15,244,198,0.05); min-width:220px; max-height:360px; display:flex; flex-direction:column; }
+.sw-card-head { padding:12px 16px 10px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:9px; flex-shrink:0; }
+.swh-portal { width:20px; height:20px; flex-shrink:0; }
+.swh-portal svg { width:20px; height:20px; display:block; }
+.swh-txt { font-family:'Inter',sans-serif; font-size:11px; font-weight:700; color:rgba(255,255,255,0.35); flex:1; }
+.swh-cur { font-size:9px; font-weight:600; letter-spacing:0.5px; color:var(--teal); background:rgba(15,244,198,0.1); border:1px solid rgba(15,244,198,0.22); padding:2px 8px; border-radius:20px; }
+.sw-list { padding:5px; overflow-y:auto; flex:1; }
+.sw-list::-webkit-scrollbar { width:3px; }
+.sw-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+.sw-divider { height:1px; background:rgba(255,255,255,0.07); margin:4px 8px; }
+.sw-section-lbl { font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:6px 11px 2px; }
+.sw-row { display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:12px; cursor:pointer; transition:background 0.12s ease; position:relative; }
+.sw-row:active { background:rgba(255,255,255,0.07); }
+.sw-row.sw-on { background:rgba(15,244,198,0.08); }
+.sw-row.sw-on::before { content:''; position:absolute; left:0; top:20%; bottom:20%; width:2px; border-radius:2px; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+.sw-ico-wrap { width:32px; height:32px; flex-shrink:0; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.sw-ico-wrap svg { width:32px; height:32px; display:block; border-radius:8px; }
+.sw-info { flex:1; min-width:0; }
+.sw-name { font-family:'Inter',sans-serif; font-size:13px; font-weight:700; }
+.sw-row.sw-on .sw-name { color:var(--teal); }
+.sw-badge { font-size:7px; font-weight:700; letter-spacing:0.8px; padding:2px 6px; border-radius:20px; }
+.sw-badge.live { color:var(--teal); background:rgba(15,244,198,0.1); border:1px solid rgba(15,244,198,0.2); }
+.sw-close-row { padding:8px 12px 10px; border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer; gap:6px; flex-shrink:0; transition:background 0.12s ease; }
+.sw-close-row:active { background:rgba(255,255,255,0.04); }
+.sw-close-txt { font-size:11px; color:rgba(255,255,255,0.28); font-weight:500; }
+#sw-panel.on .sw-row:nth-child(1){ animation:swin 0.24s 0.03s var(--spring) both; }
+#sw-panel.on .sw-row:nth-child(2){ animation:swin 0.24s 0.07s var(--spring) both; }
+#sw-panel.on .sw-row:nth-child(3){ animation:swin 0.24s 0.11s var(--spring) both; }
+@keyframes swin { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+
+/* ══ BOTTOM BAR ══ */
+#bar { flex:0 0 var(--bar-h); width:100%; background:rgba(8,9,18,0.98); border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; padding:0 6px 8px; position:relative; z-index:50; }
+.hub-slot { flex:0 0 var(--hub-w); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; flex-shrink:0; position:relative; z-index:2; }
+.hub-btn { width:42px; height:42px; border-radius:13px; background:rgba(15,244,198,0.07); border:1px solid rgba(15,244,198,0.2); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease, transform 0.15s var(--spring); flex-shrink:0; position:relative; overflow:hidden; }
+.hub-btn:active { transform:scale(0.87); }
+.hub-btn.open { background:rgba(15,244,198,0.14); border-color:rgba(15,244,198,0.5); box-shadow:0 0 18px rgba(15,244,198,0.22); }
+.hub-btn.open::after { content:''; position:absolute; inset:-3px; border-radius:16px; border:1px solid rgba(15,244,198,0.2); animation:ring 0.4s ease forwards; }
+@keyframes ring { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(1.3)} }
+.hub-portal { width:30px; height:30px; display:block; border-radius:8px; transition:transform 0.2s var(--spring); }
+.hub-btn.open .hub-portal { transform:scale(0.88); }
+.hb { display:none; }
+.hub-label { font-size:9px; font-weight:600; color:rgba(255,255,255,0.25); letter-spacing:0.5px; transition:color 0.2s ease; }
+.hub-btn.open + .hub-label { color:var(--teal); }
+.bar-sep { width:1px; height:28px; background:rgba(255,255,255,0.08); flex-shrink:0; margin-right:2px; }
+.ql-logo { width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
+.ql-logo svg { width:26px; height:26px; display:block; border-radius:7px; }
+.ni { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:4px 2px; cursor:pointer; border-radius:10px; position:relative; transition:background 0.12s ease; }
+.ni:active { background:rgba(255,255,255,0.05); }
+.ni-icon { font-size:18px; line-height:1; transition:transform 0.18s var(--spring); }
+.ni-lbl { font-size:9px; font-weight:500; color:rgba(255,255,255,0.28); transition:color 0.15s ease; }
+.ni-dot { position:absolute; bottom:2px; width:4px; height:4px; border-radius:2px; background:var(--teal); opacity:0; transform:scaleX(0); transition:all 0.2s var(--spring); }
+.ni.active .ni-lbl { color:var(--teal); }
+.ni.active .ni-icon { transform:translateY(-2px); }
+.ni.active .ni-dot { opacity:1; transform:scaleX(1); }
+.home-ql { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:4px 2px; cursor:pointer; border-radius:10px; transition:background 0.12s ease; }
+.home-ql:active { background:rgba(255,255,255,0.05); }
+.ql-lbl { font-size:9px; font-weight:500; color:rgba(255,255,255,0.28); }
+
+/* ══ INSTALL MODAL ══ */
+#install-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
+#install-modal.on { opacity:1; pointer-events:all; }
+.install-sheet { width:100%; background:#0f1120; border:1px solid rgba(255,255,255,0.1); border-bottom:none; border-radius:24px 24px 0 0; padding:20px 24px max(40px, env(safe-area-inset-bottom, 40px)); transform:translateY(100%); transition:transform 0.32s var(--spring); }
+#install-modal.on .install-sheet { transform:translateY(0); }
+.sheet-handle { width:36px; height:4px; border-radius:2px; background:rgba(255,255,255,0.15); margin:0 auto 20px; }
+.sheet-title { font-family:'Inter',sans-serif; font-size:17px; font-weight:700; margin-bottom:6px; }
+.sheet-sub { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:20px; line-height:1.5; }
+.install-steps { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.install-step { display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px; }
+.step-num { width:22px; height:22px; border-radius:50%; background:rgba(15,244,198,0.15); border:1px solid rgba(15,244,198,0.3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--teal); flex-shrink:0; margin-top:1px; }
+.step-txt { font-size:12px; color:rgba(255,255,255,0.7); line-height:1.5; }
+.step-txt strong { color:#fff; font-weight:600; }
+.sheet-close { width:100%; padding:13px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; line-height:1; color:rgba(255,255,255,0.5); cursor:pointer; transition:background 0.15s ease; }
+.sheet-close:active { background:rgba(255,255,255,0.1); }
+
+/* ══ SOON SHEET ══ */
+#soon-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
+#soon-modal.on { opacity:1; pointer-events:all; }
+.soon-sheet {
+  width:100%;
+  background:#0f1120;
+  border:1px solid rgba(255,255,255,0.1);
+  border-bottom:none;
+  border-radius:24px 24px 0 0;
+  padding:20px 24px 0;
+  padding-bottom:max(44px, env(safe-area-inset-bottom, 44px));
+  transform:translateY(100%);
+  transition:transform 0.32s var(--spring);
+  max-height:88vh;
+  max-height:88dvh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+#soon-modal.on .soon-sheet { transform:translateY(0); }
+.soon-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:16px; padding-bottom:2px; }
+.soon-logo { width:44px; height:44px; flex-shrink:0; border-radius:12px; overflow:hidden; margin-top:2px; }
+.soon-logo svg { width:44px; height:44px; display:block; }
+.soon-title-wrap { flex:1; min-width:0; }
+.soon-title { font-family:'Inter',sans-serif; font-size:18px; font-weight:700; line-height:1.3; padding-bottom:2px; }
+.soon-badge-row { display:flex; align-items:center; gap:6px; margin-top:4px; }
+.soon-pill { font-size:8px; font-weight:700; letter-spacing:1px; padding:2px 7px; border-radius:20px; color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+.soon-oneliner { font-family:'Inter',sans-serif; font-size:14px; font-weight:700; color:#fff; line-height:1.5; margin-bottom:16px; padding-bottom:2px; }
+.soon-points { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.soon-point { display:flex; align-items:flex-start; gap:10px; }
+.soon-point-dot { width:6px; height:6px; border-radius:50%; background:var(--teal); flex-shrink:0; margin-top:5px; }
+.soon-point-txt { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.5; }
+/* TabSolutions two-col */
+.soon-two-col { display:grid; grid-template-columns:1fr 1fr; gap:0; margin-bottom:16px; border:1px solid rgba(255,255,255,0.08); border-radius:14px; overflow:hidden; }
+.soon-col { padding:14px; }
+.soon-col:first-child { border-right:1px solid rgba(255,255,255,0.08); }
+.soon-col-title { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal); margin-bottom:10px; }
+.soon-col-item { font-size:11px; color:rgba(255,255,255,0.55); padding:3px 0; line-height:1.4; }
+.soon-col-item::before { content:'— '; color:rgba(255,255,255,0.2); }
+.soon-closer { font-size:12px; color:rgba(255,255,255,0.4); line-height:1.6; margin-bottom:20px; font-style:italic; }
+.soon-cta { width:100%; padding:14px; background:linear-gradient(135deg,rgba(79,142,247,0.3),rgba(15,244,198,0.2)); border:1px solid rgba(15,244,198,0.3); border-radius:14px; font-family:'Inter',sans-serif; font-size:14px; font-weight:700; line-height:1; color:#fff; cursor:pointer; transition:opacity 0.15s ease; margin-bottom:10px; }
+.soon-cta:active { opacity:0.8; }
+.soon-dismiss { width:100%; padding:10px; background:transparent; border:none; font-size:12px; color:rgba(255,255,255,0.25); cursor:pointer; }
+/* TabOps app list sheet */
+.ops-tier-label { font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.2); margin:16px 0 8px; }
+.ops-tier-label:first-of-type { margin-top:0; }
+.ops-app-row { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); cursor:pointer; transition:background 0.14s ease; margin-bottom:8px; }
+.ops-app-row:active { background:rgba(255,255,255,0.08); }
+.ops-app-row.dimmed { opacity:0.4; cursor:default; }
+.ops-app-icon { width:36px; height:36px; flex-shrink:0; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.ops-app-icon svg { width:36px; height:36px; display:block; }
+.ops-app-info { flex:1; min-width:0; }
+.ops-app-name { font-family:'Inter',sans-serif; font-size:13px; font-weight:700; color:#fff; }
+.ops-app-desc { font-size:11px; color:rgba(255,255,255,0.35); margin-top:2px; line-height:1.4; }
+.ops-app-chevron { font-size:14px; color:rgba(255,255,255,0.2); flex-shrink:0; }
+.ops-soon-tag { font-size:8px; font-weight:600; letter-spacing:1px; color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:2px 7px; flex-shrink:0; }
+/* App sheet back button */
+.sheet-back { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:7px 12px; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); cursor:pointer; width:fit-content; margin-bottom:16px; transition:background 0.14s ease; }
+.sheet-back:active { background:rgba(255,255,255,0.09); }
+
+/* ══ FEEDBACK MODAL ══ */
+#feedback-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
+#feedback-modal.on { opacity:1; pointer-events:all; }
+.feedback-sheet { width:100%; background:#0f1120; border:1px solid rgba(255,255,255,0.1); border-bottom:none; border-radius:24px 24px 0 0; padding:20px 24px max(40px, env(safe-area-inset-bottom, 40px)); transform:translateY(100%); transition:transform 0.32s var(--spring); }
+#feedback-modal.on .feedback-sheet { transform:translateY(0); }
+.feedback-textarea { width:100%; min-height:100px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; font-family:'Inter',sans-serif; font-size:13px; color:#fff; resize:none; outline:none; margin-bottom:12px; transition:border-color 0.15s ease; }
+.feedback-textarea:focus { border-color:rgba(15,244,198,0.3); }
+.feedback-textarea::placeholder { color:rgba(255,255,255,0.25); }
+.feedback-send { width:100%; padding:13px; background:linear-gradient(135deg,var(--blue),var(--teal)); border:none; border-radius:12px; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; line-height:1; color:var(--dark); cursor:pointer; transition:opacity 0.15s ease; margin-bottom:10px; }
+.feedback-send:active { opacity:0.85; }
+.feedback-close { width:100%; padding:11px; background:transparent; border:none; font-size:12px; color:rgba(255,255,255,0.3); cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- ══ SPLASH ══ -->
+<div id="splash">
+  <svg class="splash-portal" width="80" height="80" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="96" height="96" rx="22" fill="#1a1a2e"/>
+    <rect x="10" y="10" width="76" height="76" rx="16" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-opacity="0.4"/>
+    <rect x="20" y="20" width="56" height="56" rx="12" fill="none" stroke="url(#sp-grad)" stroke-width="5"/>
+    <circle cx="48" cy="48" r="14" fill="#0ff4c6" fill-opacity="0.07"/>
+    <circle cx="48" cy="48" r="7" fill="#0ff4c6"/>
+    <defs><linearGradient id="sp-grad" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8ef7"/><stop offset="1" stop-color="#0ff4c6"/></linearGradient></defs>
+  </svg>
+  <div class="splash-wordmark">Tab<span>Space</span></div>
+  <div class="splash-tag">by CyberTabX</div>
+</div>
+
+<!-- ══ SHELL ══ -->
+<div id="shell">
+  <div id="screens">
+
+    <!-- Switcher backdrop -->
+    <div id="sw-backdrop" onclick="closePanel()"></div>
+
+    <!-- Switcher panel -->
+    <div id="sw-panel">
+      <div class="sw-card">
+        <div class="sw-card-head">
+          <div class="swh-portal">
+            <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="96" height="96" rx="22" fill="#1a1a2e"/>
+              <rect x="10" y="10" width="76" height="76" rx="16" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-opacity="0.4"/>
+              <rect x="20" y="20" width="56" height="56" rx="12" fill="none" stroke="url(#sw-g)" stroke-width="5"/>
+              <circle cx="48" cy="48" r="7" fill="#0ff4c6"/>
+              <defs><linearGradient id="sw-g" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8ef7"/><stop offset="1" stop-color="#0ff4c6"/></linearGradient></defs>
+            </svg>
+          </div>
+          <div class="swh-txt">Switch</div>
+          <div class="swh-cur" id="swh-cur">TabSpace</div>
+        </div>
+        <div class="sw-list" id="sw-list"></div>
+        <div class="sw-close-row" onclick="closePanel()">
+          <div class="sw-close-txt">Close</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INVITE LANDING ── -->
+    <div class="screen hidden" id="s-invite">
+      <div class="invite-back" onclick="goHome()">←</div>
+      <div class="invite-inner">
+        <div class="invite-logo">
+          <svg width="64" height="64" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="96" height="96" rx="22" fill="#1a1a2e"/>
+            <rect x="10" y="10" width="76" height="76" rx="16" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-opacity="0.4"/>
+            <rect x="20" y="20" width="56" height="56" rx="12" fill="none" stroke="url(#inv-g)" stroke-width="5"/>
+            <circle cx="48" cy="48" r="14" fill="#0ff4c6" fill-opacity="0.07"/>
+            <circle cx="48" cy="48" r="7" fill="#0ff4c6"/>
+            <defs><linearGradient id="inv-g" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8ef7"/><stop offset="1" stop-color="#0ff4c6"/></linearGradient></defs>
+          </svg>
+          <div class="invite-wordmark">Tab<span>Space</span></div>
+        </div>
+        <div class="invite-from">You've been invited to</div>
+        <div class="invite-heading">Tab into <em>your world.</em></div>
+        <div class="invite-sub">Finance. News. And everything that runs your life — in one platform.</div>
+        <div class="invite-products" id="invite-products"></div>
+        <button class="invite-cta" onclick="showInstallModal()">Add to Home Screen</button>
+        <div class="invite-explore" onclick="goHome()">Explore first →</div>
+      </div>
+    </div>
+
+    <!-- ── HOME ── -->
+    <div class="screen" id="s-home">
+
+      <!-- Tab Space platform header -->
+      <div class="tabspace-header">
+        <div class="tabspace-header-icon" onclick="window.location.href='https://cybertabx.com'">
+          <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="96" height="96" rx="22" fill="#1a1a2e"/>
+            <rect x="10" y="10" width="76" height="76" rx="16" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-opacity="0.4"/>
+            <rect x="20" y="20" width="56" height="56" rx="12" fill="none" stroke="url(#hdr-g)" stroke-width="5"/>
+            <circle cx="48" cy="48" r="14" fill="#0ff4c6" fill-opacity="0.07"/>
+            <circle cx="48" cy="48" r="7" fill="#0ff4c6"/>
+            <defs><linearGradient id="hdr-g" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8ef7"/><stop offset="1" stop-color="#0ff4c6"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="tabspace-header-name">Tab<span>Space</span></div>
+        <a class="tabspace-header-sub" href="https://cybertabx.com" target="_blank" rel="noopener" style="text-decoration:none; cursor:pointer;">by CyberTabX</a>
+      </div>
+
+      <div class="home-body" style="padding-top:60px;">
+        <div class="home-heading">What are you<br>working on <em>today?</em></div>
+
+        <!-- Consumer apps — no section label -->
+        <div class="app-grid">
+          <div class="app-card live" onclick="switchTo('tabfin')">
+            <div class="card-badge b-live">LIVE</div>
+            <div class="card-logo" id="card-logo-tabfin"></div>
+            <div class="card-name">TabFin</div>
+            <div class="card-desc">Your money. Organised. Understood.</div>
+          </div>
+          <div class="app-card live" onclick="switchTo('tabnews')">
+            <div class="card-badge b-live">LIVE</div>
+            <div class="card-logo" id="card-logo-tabnews"></div>
+            <div class="card-name">TabNews</div>
+            <div class="card-desc">Not just what happened. What it means.</div>
+          </div>
+          <div class="app-card soon" onclick="openSoonSheet('tabarena')">
+            <div class="card-badge b-soon">SOON</div>
+            <div class="card-logo" id="card-logo-tabarena"></div>
+            <div class="card-name">TabArena</div>
+            <div class="card-desc">Your gaming identity. One home.</div>
+          </div>
+          <div class="app-card soon" onclick="openSoonSheet('tabpulse')">
+            <div class="card-badge b-soon">SOON</div>
+            <div class="card-logo" id="card-logo-tabpulse"></div>
+            <div class="card-name">TabPulse</div>
+            <div class="card-desc">AI that knows your world before you ask.</div>
+          </div>
+        </div>
+
+        <!-- Business section -->
+        <div class="sec-label-biz">For Your Business</div>
+        <div class="app-grid">
+          <div class="app-card soon" style="grid-column:1/-1" onclick="openSoonSheet('tabops')">
+            <div class="card-badge b-soon">SOON</div>
+            <div class="card-logo" id="card-logo-tabops"></div>
+            <div class="card-name">TabOps</div>
+            <div class="card-desc">Your business, one system.</div>
+          </div>
+          <div class="app-card soon" style="grid-column:1/-1" onclick="openSoonSheet('tabsolutions')">
+            <div class="card-badge b-soon">SOON</div>
+            <div class="card-logo" id="card-logo-tabsolutions"></div>
+            <div class="card-name">TabSolutions</div>
+            <div class="card-desc">Built. Secured. Compliant.</div>
+          </div>
+        </div>
+
+        <!-- Install card — permanent, smart hide -->
+        <div class="install-card hidden" id="install-card" onclick="showInstallModal()">
+          <div class="install-icon">📲</div>
+          <div class="install-text">
+            <div class="install-title">Add to Home Screen</div>
+            <div class="install-sub">One tap. Always there. Works offline.</div>
+          </div>
+          <div class="install-arrow">→</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="home-footer">
+          <div class="footer-actions">
+            <div class="invite-btn" onclick="shareTabX()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+              <div class="invite-btn-txt" id="invite-btn-txt">Invite to TabX</div>
+            </div>
+            <div class="feedback-btn" onclick="showFeedback()">
+              <div class="feedback-btn-txt">Feedback & Support</div>
+            </div>
+          </div>
+          <div class="social-row">
+            <a class="social-link" href="https://youtube.com/@cybertabx" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="rgba(255,255,255,0.5)"/>
+                <polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="#0c0e1a"/>
+              </svg>
+            </a>
+            <a class="social-link" href="https://instagram.com/cybertabx" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="2" width="20" height="20" rx="6" fill="rgba(255,255,255,0.5)"/>
+                <circle cx="12" cy="12" r="4" fill="#0c0e1a"/>
+                <circle cx="17.5" cy="6.5" r="1.2" fill="#0c0e1a"/>
+                <circle cx="12" cy="12" r="2.5" fill="rgba(255,255,255,0.5)"/>
+              </svg>
+            </a>
+            <a class="social-link" href="https://linkedin.com/company/cybertabx" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                <rect x="2" y="9" width="4" height="12"/>
+                <circle cx="4" cy="4" r="2"/>
+              </svg>
+            </a>
+            <a class="social-link" href="https://cybertabx.com" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </a>
+          </div>
+          <div class="footer-copy">© 2025 CyberTabX · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87efe2ebebe8c7e4fee5e2f5f3e6e5ffa9e4e8ea">[email&#160;protected]</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TABFIN ── -->
+    <div class="screen hidden" id="s-tabfin">
+      <div class="tf-head">
+        <div class="tf-logo"><div></div><div></div><div></div></div>
+        <div class="tf-title">TabFin</div>
+        <div class="tf-sub">Overview</div>
+      </div>
+      <div class="tf-body">
+        <div class="fin-hero">
+          <div class="fl">Net Worth</div>
+          <div class="fv">₹48,32,000</div>
+          <div class="fd">↑ +4.2% this month</div>
+        </div>
+        <div class="fin-row">
+          <div class="fin-tile"><div class="ftl">Income</div><div class="ftv g">₹1,20,000</div></div>
+          <div class="fin-tile"><div class="ftl">Expenses</div><div class="ftv r">₹68,400</div></div>
+        </div>
+        <div class="fin-row">
+          <div class="fin-tile"><div class="ftl">Savings</div><div class="ftv">43%</div></div>
+          <div class="fin-tile"><div class="ftl">FIRE</div><div class="ftv b">31%</div></div>
+        </div>
+        <div class="fin-tile" style="padding:14px">
+          <div class="ftl">Monthly Verdict</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.48);margin-top:6px;line-height:1.6">You saved more than last month. Expenses under control. Keep it up.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TABNEWS ── -->
+    <div class="screen hidden" id="s-tabnews">
+      <div class="tn-head">
+        <svg class="ecg" viewBox="0 0 48 22" fill="none">
+          <circle cx="6" cy="14" r="3.5" fill="#ff3d3d"/>
+          <polyline points="10,14 18,14 21,4 24,20 27,10 30,14 48,14" stroke="#0ff4c6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="tn-title"><span class="tn-t">Tab</span><span class="tn-n">News</span></div>
+        <div class="live-dot"></div>
+      </div>
+      <div class="tn-body">
+        <div class="nc"><div class="nc-cat">Markets</div><div class="nc-hl">RBI holds repo rate steady at 6.5% amid global uncertainty</div><div class="nc-ins">💡 Rate hold supports EMI stability — repayments stay predictable.</div><div class="nc-foot"><div class="nc-time">2h ago · ET</div><div class="nc-read">Read →</div></div></div>
+        <div class="nc"><div class="nc-cat">Tech</div><div class="nc-hl">Apple Vision Pro sales disappoint as enterprise adoption stalls</div><div class="nc-ins">💡 Consumer AR still early — tech volatility may continue short-term.</div><div class="nc-foot"><div class="nc-time">4h ago · Reuters</div><div class="nc-read">Read →</div></div></div>
+        <div class="nc"><div class="nc-cat">UAE</div><div class="nc-hl">Dubai launches long-term visa for remote workers in creative sectors</div><div class="nc-ins">💡 Expanding residency strengthens UAE's talent appeal and property demand.</div><div class="nc-foot"><div class="nc-time">6h ago · Gulf News</div><div class="nc-read">Read →</div></div></div>
+      </div>
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- ══ BOTTOM BAR ══ -->
+  <div id="bar">
+    <div class="hub-slot">
+      <div class="hub-btn" id="hub-btn" onclick="togglePanel()">
+        <svg class="hub-portal" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="96" height="96" rx="22" fill="#1a1a2e"/>
+          <rect x="10" y="10" width="76" height="76" rx="16" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-opacity="0.4"/>
+          <rect x="20" y="20" width="56" height="56" rx="12" fill="none" stroke="url(#bar-g)" stroke-width="5"/>
+          <circle cx="48" cy="48" r="14" fill="#0ff4c6" fill-opacity="0.07"/>
+          <circle cx="48" cy="48" r="7" fill="#0ff4c6"/>
+          <defs><linearGradient id="bar-g" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8ef7"/><stop offset="1" stop-color="#0ff4c6"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="hub-label">TabSpace</div>
+    </div>
+    <div class="bar-sep"></div>
+    <div id="nav-wrap" style="display:contents"></div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- ══ INSTALL MODAL ══ -->
+<div id="install-modal" onclick="hideInstallModal()">
+  <div class="install-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add CyberTabX to your Home Screen</div>
+    <div class="sheet-sub">Works like a native app. No app store needed. Always up to date.</div>
+    <div class="install-steps" id="install-steps"></div>
+    <button class="sheet-close" onclick="hideInstallModal()">Done</button>
+  </div>
+</div>
+
+<!-- ══ SOON MODAL ══ -->
+<div id="soon-modal" onclick="closeSoonSheet()">
+  <div class="soon-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div id="soon-content"></div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK MODAL ══ -->
+<div id="feedback-modal" onclick="hideFeedback()">
+  <div class="feedback-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Feedback & Support</div>
+    <div class="sheet-sub" style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:16px">We read everything. Tell us what's on your mind.</div>
+    <textarea class="feedback-textarea" id="feedback-text" placeholder="What's working? What isn't? What would you love to see?"></textarea>
+    <button class="feedback-send" onclick="sendFeedback()">Send Feedback</button>
+    <button class="feedback-close" onclick="hideFeedback()">Cancel</button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ══ LOGOS ══ */
+const LOGOS = {
+  hub:`<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="96" height="96" rx="22" fill="#1a1a2e"/><rect x="10" y="10" width="76" height="76" rx="16" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-opacity="0.4"/><rect x="20" y="20" width="56" height="56" rx="12" fill="none" stroke="url(#hub-g)" stroke-width="5"/><circle cx="48" cy="48" r="14" fill="#0ff4c6" fill-opacity="0.07"/><circle cx="48" cy="48" r="7" fill="#0ff4c6"/><defs><linearGradient id="hub-g" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8ef7"/><stop offset="1" stop-color="#0ff4c6"/></linearGradient></defs></svg>`,
+
+  tabfin:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="5" y="18" width="4" height="5" rx="1.5" fill="#4f8ef7" opacity="0.7"/><rect x="11" y="14" width="4" height="9" rx="1.5" fill="#4f8ef7" opacity="0.85"/><rect x="17" y="9" width="4" height="14" rx="1.5" fill="#4f8ef7"/><polyline points="7,17 13,12 19,7" stroke="#0ff4c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="7" r="1.8" fill="#0ff4c6"/></svg>`,
+
+  tabnews:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><circle cx="5" cy="14" r="2.5" fill="#ff3d3d"/><polyline points="9,14 12,14 14,8 16,19 18,12 20,14 24,14" stroke="#0ff4c6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+
+  tabarena:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><path d="M4 14 C4 10 6 9 8 9 L20 9 C22 9 24 10 24 14 L22 18 C21 20 19 21 17 21 L11 21 C9 21 7 20 6 18 Z" fill="#4f8ef7" opacity="0.9"/><rect x="7" y="13" width="4" height="2" rx="1" fill="#1a1a2e"/><rect x="8" y="12" width="2" height="4" rx="1" fill="#1a1a2e"/><circle cx="19" cy="13" r="1.2" fill="#0ff4c6"/><circle cx="21" cy="15" r="1.2" fill="#0ff4c6" opacity="0.5"/></svg>`,
+
+  tabpulse:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><path d="M3 14 Q5 8 7 14 Q9 20 11 14 Q13 8 14 14 Q15 20 17 14 Q19 8 21 14 Q23 20 25 14" stroke="#4f8ef7" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.6"/><path d="M9 14 Q11 9 14 14 Q17 19 19 14" stroke="#0ff4c6" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="14" cy="14" r="2" fill="#0ff4c6" opacity="0.9"/><circle cx="14" cy="14" r="3.5" fill="#0ff4c6" opacity="0.15"/></svg>`,
+
+  tabsolutions:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="4" y="16" width="9.5" height="8" rx="2" fill="#4f8ef7" opacity="0.45"/><rect x="14.5" y="16" width="9.5" height="8" rx="2" fill="#4f8ef7" opacity="0.6"/><rect x="4" y="9" width="20" height="6" rx="2" fill="#4f8ef7" opacity="0.82"/><rect x="8" y="4" width="12" height="4.5" rx="1.8" fill="#0ff4c6" opacity="0.95"/><line x1="4" y1="15.5" x2="24" y2="15.5" stroke="#0c0e1a" stroke-width="1.2"/><line x1="4" y1="8.5" x2="24" y2="8.5" stroke="#0c0e1a" stroke-width="1.2"/><line x1="14" y1="16" x2="14" y2="24" stroke="#0c0e1a" stroke-width="1.2"/></svg>`,
+
+  /* TabOps suite icon */
+  tabops:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="5" y="5" width="7.5" height="7.5" rx="2" fill="#4f8ef7" opacity="0.9"/><rect x="15.5" y="5" width="7.5" height="7.5" rx="2" fill="#4f8ef7" opacity="0.55"/><rect x="5" y="15.5" width="7.5" height="7.5" rx="2" fill="#4f8ef7" opacity="0.55"/><rect x="15.5" y="15.5" width="7.5" height="7.5" rx="2" fill="#0ff4c6" opacity="0.9"/><circle cx="14" cy="14" r="1.8" fill="rgba(255,255,255,0.12)"/><line x1="8.75" y1="12.5" x2="8.75" y2="15.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><line x1="12.5" y1="8.75" x2="15.5" y2="8.75" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><line x1="19.25" y1="12.5" x2="19.25" y2="15.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><line x1="12.5" y1="19.25" x2="15.5" y2="19.25" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/></svg>`,
+
+  /* TabOps — Tier 1 app icons */
+  ops_tabcrm:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><path d="M4 22 C4 17 7 15 10 15 C13 15 16 17 16 22" stroke="#4f8ef7" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="10" cy="10" r="4" fill="#4f8ef7" opacity="0.85"/><path d="M18 12 L24 12 M21 9 L24 12 L21 15" stroke="#0ff4c6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  ops_tabinvoice:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="6" y="4" width="16" height="20" rx="3" fill="none" stroke="#4f8ef7" stroke-width="1.8" opacity="0.7"/><line x1="10" y1="10" x2="18" y2="10" stroke="#4f8ef7" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/><line x1="10" y1="14" x2="18" y2="14" stroke="#4f8ef7" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/><line x1="10" y1="18" x2="15" y2="18" stroke="#4f8ef7" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/><circle cx="21" cy="21" r="5" fill="#0c0e1a"/><path d="M19 21 L21 23 L24 19" stroke="#0ff4c6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  ops_tabwork:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="4" y="8" width="5.5" height="14" rx="2" fill="#4f8ef7" opacity="0.4"/><rect x="11.25" y="5" width="5.5" height="17" rx="2" fill="#4f8ef7" opacity="0.7"/><rect x="18.5" y="10" width="5.5" height="12" rx="2" fill="#0ff4c6" opacity="0.85"/><line x1="4" y1="24" x2="24" y2="24" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-linecap="round"/></svg>`,
+  ops_tabcontacts:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><circle cx="10" cy="10" r="3.5" fill="#4f8ef7" opacity="0.9"/><circle cx="19" cy="10" r="2.5" fill="#4f8ef7" opacity="0.55"/><path d="M4 21 C4 17 7 15 10 15 C13 15 16 17 16 21" stroke="#4f8ef7" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M16.5 15.5 C17.5 15.5 20 17 20 19.5" stroke="#0ff4c6" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.85"/><line x1="10" y1="6.5" x2="19" y2="10" stroke="rgba(255,255,255,0.1)" stroke-width="0.8" stroke-dasharray="2 1.5"/></svg>`,
+  ops_tabexpense:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="6" y="7" width="13" height="16" rx="2.5" fill="none" stroke="#4f8ef7" stroke-width="1.8" opacity="0.7"/><line x1="9" y1="12" x2="16" y2="12" stroke="#4f8ef7" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/><line x1="9" y1="15" x2="14" y2="15" stroke="#4f8ef7" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/><line x1="9" y1="18" x2="13" y2="18" stroke="#4f8ef7" stroke-width="1.2" stroke-linecap="round" opacity="0.3"/><path d="M19 17 L19 10 M17 12 L19 10 L21 12" stroke="#0ff4c6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+
+  /* TabOps — Tier 2 app icons */
+  ops_tabpeople:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><circle cx="14" cy="8" r="3.5" fill="#4f8ef7" opacity="0.7"/><path d="M8 21 C8 17 11 15 14 15 C17 15 20 17 20 21" stroke="#4f8ef7" stroke-width="1.8" fill="none" stroke-linecap="round"/><line x1="14" y1="21" x2="14" y2="24" stroke="#0ff4c6" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/><line x1="10" y1="24" x2="18" y2="24" stroke="#0ff4c6" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/></svg>`,
+  ops_tabdesk:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="5" y="7" width="18" height="13" rx="3" fill="none" stroke="#4f8ef7" stroke-width="1.8" opacity="0.7"/><circle cx="9" cy="13.5" r="1.5" fill="#4f8ef7" opacity="0.6"/><line x1="12" y1="11" x2="19" y2="11" stroke="#4f8ef7" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/><line x1="12" y1="13.5" x2="19" y2="13.5" stroke="#4f8ef7" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/><line x1="12" y1="16" x2="16" y2="16" stroke="#4f8ef7" stroke-width="1.2" stroke-linecap="round" opacity="0.3"/><path d="M10 20 L10 23 M18 20 L18 23 M8 23 L20 23" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-linecap="round" fill="none"/></svg>`,
+  ops_tabstock:`<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><rect x="5" y="12" width="18" height="12" rx="2.5" fill="none" stroke="#4f8ef7" stroke-width="1.8" opacity="0.7"/><rect x="8" y="9" width="12" height="4" rx="2" fill="none" stroke="#4f8ef7" stroke-width="1.4" opacity="0.45"/><rect x="10" y="6" width="8" height="4" rx="2" fill="none" stroke="#4f8ef7" stroke-width="1.2" opacity="0.25"/><line x1="9" y1="18" x2="9" y2="21" stroke="#0ff4c6" stroke-width="3" stroke-linecap="round" opacity="0.8"/><line x1="14" y1="16" x2="14" y2="21" stroke="#0ff4c6" stroke-width="3" stroke-linecap="round" opacity="0.5"/><line x1="19" y1="19" x2="19" y2="21" stroke="#0ff4c6" stroke-width="3" stroke-linecap="round" opacity="0.3"/></svg>`,
+};
+
+/* ══ SOON PRODUCT CONFIG ══ */
+const SOON_PRODUCTS = {
+  tabarena: {
+    name:'TabArena',
+    oneliner:'Your gaming identity. One home.',
+    points:[
+      'Discover and join tournaments — casual to competitive',
+      'Live event launches and game drops — never miss a release',
+      'Online play coordination — find your squad, schedule sessions',
+      'Gaming profile that travels with you across platforms',
+      'Community boards by game, genre, region',
+    ],
+    type:'standard',
+  },
+  tabpulse: {
+    name:'TabPulse',
+    oneliner:'AI that already knows your world before you ask.',
+    points:[
+      'Grows smarter the more of Tab Space you use',
+      'Connected to your TabFin data — ask anything about your finances',
+      'Reads your TabNews feed — understands what\'s shaping your world',
+      'Works across TabOps — your business context, always in view',
+      'Private by design — your data stays yours, always',
+    ],
+    type:'standard',
+  },
+  tabops: {
+    name:'TabOps',
+    oneliner:'Your business, one system.',
+    type:'tabops',
+    tier1:[
+      { key:'ops_tabcrm',      name:'TabCRM',      desc:'Stop losing deals you never knew you had.',             points:['Pipeline visibility from first contact to closed deal','Smart follow-up reminders — never drop a lead again','Full client history — every call, email, note in one view','Team collaboration without the chaos','Built for growing businesses, not enterprise complexity'] },
+      { key:'ops_tabinvoice',  name:'TabInvoice',  desc:'Quotes to payments, without the chaos.',                points:['Create professional quotes in seconds','Convert to invoice with one tap','Payment tracking and reminders — automatic','Multi-currency support for UAE and India','Full audit trail on every transaction'] },
+      { key:'ops_tabwork',     name:'TabWork',     desc:'Projects and tasks, the way your team actually works.', points:['Kanban boards, lists, or timeline — your choice','Assign tasks, set deadlines, track progress','Client-facing project views — no extra login needed','Time tracking built in, not bolted on','Connects to TabInvoice — bill hours directly'] },
+      { key:'ops_tabcontacts', name:'TabContacts', desc:'Everyone your business knows, in one place.',           points:['Unified contact and company profiles','Full interaction history — calls, emails, deals, invoices','CSV import from any existing system','Shared across CRM, Invoicing and Projects','The foundation every other TabOps app reads from'] },
+      { key:'ops_tabexpense',  name:'TabExpense',  desc:'Expenses tracked, approved, done.',                     points:['Capture receipts on mobile — instant upload','Approval workflows for teams','Multi-currency expense reporting','Connects to TabInvoice for client reimbursement','Export-ready reports for accounting'] },
+    ],
+    tier2:[
+      { key:'ops_tabpeople', name:'TabPeople', desc:'HR and team management, simplified.' },
+      { key:'ops_tabdesk',   name:'TabDesk',   desc:'Client support tickets, handled.' },
+      { key:'ops_tabstock',  name:'TabStock',  desc:'Inventory and stock, under control.' },
+    ],
+  },
+  tabsolutions: {
+    name:'TabSolutions',
+    oneliner:'Your business, secured. Your infrastructure, built. Your compliance, handled.',
+    type:'solutions',
+    products:['Cybersecurity','Cloud & Storage','Custom Development'],
+    services:['VAPT','ISO Compliance','Red Teaming','Data Security'],
+    closer:'One partner. Every layer of your business — built and secured.',
+  },
+};
+
+/* ══ APPS CONFIG ══ */
+const APPS = {
+  home:    { name:'TabSpace', badge:null,   logo:LOGOS.hub,          nav:null },
+  tabfin:  { name:'TabFin',   badge:'live', logo:LOGOS.tabfin,       nav:[{icon:'🏠',label:'Overview'},{icon:'📅',label:'Log'},{icon:'📈',label:'Invest'},{icon:'🎯',label:'Goals'},{icon:'⚙️',label:'More'}] },
+  tabnews: { name:'TabNews',  badge:'live', logo:LOGOS.tabnews,      nav:[{icon:'🔥',label:'Top'},{icon:'📊',label:'Markets'},{icon:'🌍',label:'World'},{icon:'🔔',label:'Alerts'}] },
+};
+
+/* ══ STATE ══ */
+let cur = 'home';
+let panelOpen = false;
+let deferredInstallPrompt = null;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+/* ══ SPLASH ══ */
+function initSplash() {
+  const splash = document.getElementById('splash');
+  const launched = localStorage.getItem('ctx_launched');
+  const delay = launched ? 700 : 1500;
+  if (launched) splash.style.transition = 'opacity 0.4s ease';
+  setTimeout(() => {
+    splash.classList.add('out');
+    setTimeout(() => { splash.style.display = 'none'; }, 500);
+  }, delay);
+  localStorage.setItem('ctx_launched', '1');
+}
+
+/* ══ INVITE ══ */
+function checkInvite() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('ref') === 'invite') {
+    document.getElementById('s-home').classList.add('hidden');
+    document.getElementById('s-invite').classList.remove('hidden');
+    const container = document.getElementById('invite-products');
+    ['tabfin','tabnews'].forEach(k => {
+      const div = document.createElement('div');
+      div.className = 'invite-prod';
+      div.innerHTML = `${LOGOS[k]}<div class="invite-prod-name">${APPS[k].name}</div>`;
+      container.appendChild(div);
+    });
+    document.getElementById('bar').style.display = 'none';
+  }
+}
+
+function goHome() {
+  document.getElementById('s-invite').classList.add('hidden');
+  document.getElementById('s-home').classList.remove('hidden');
+  document.getElementById('bar').style.display = 'flex';
+  cur = 'home';
+  renderBar('home');
+}
+
+/* ══ INSTALL CARD — permanent, smart hide ══ */
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+function checkInstallCard() {
+  if (isStandalone) return;
+  if (!localStorage.getItem('ctx_first_used')) return;
+  document.getElementById('install-card').classList.remove('hidden');
+}
+
+function showInstallModal() {
+  if (deferredInstallPrompt && !isIOS) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; });
+    return;
+  }
+  const steps = document.getElementById('install-steps');
+  steps.innerHTML = '';
+  const iosSteps = [
+    {n:1, html:'Tap the <strong>Share button</strong> at the bottom of your browser'},
+    {n:2, html:'Scroll down and tap <strong>"Add to Home Screen"</strong>'},
+    {n:3, html:'Tap <strong>"Add"</strong> in the top right — done.'},
+  ];
+  const androidSteps = [
+    {n:1, html:'Tap the <strong>three dots menu</strong> in your browser'},
+    {n:2, html:'Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>'},
+    {n:3, html:'Tap <strong>"Add"</strong> to confirm — done.'},
+  ];
+  (isIOS ? iosSteps : androidSteps).forEach(s => {
+    steps.innerHTML += `<div class="install-step"><div class="step-num">${s.n}</div><div class="step-txt">${s.html}</div></div>`;
+  });
+  document.getElementById('install-modal').classList.add('on');
+}
+
+function hideInstallModal() {
+  document.getElementById('install-modal').classList.remove('on');
+}
+
+/* ══ SOON SHEET ══ */
+function openSoonSheet(key) {
+  const p = SOON_PRODUCTS[key];
+  const logo = LOGOS[key];
+  const content = document.getElementById('soon-content');
+
+  if (p.type === 'tabops') {
+    renderTabOpsSheet();
+    document.getElementById('soon-modal').classList.add('on');
+    return;
+  }
+
+  let inner = `
+    <div class="soon-header">
+      <div class="soon-logo">${logo}</div>
+      <div class="soon-title-wrap">
+        <div class="soon-title">${p.name}</div>
+        <div class="soon-badge-row"><div class="soon-pill">COMING SOON</div></div>
+      </div>
+    </div>
+    <div class="soon-oneliner">${p.oneliner}</div>`;
+
+  if (p.type === 'standard') {
+    inner += `<div class="soon-points">`;
+    p.points.forEach(pt => {
+      inner += `<div class="soon-point"><div class="soon-point-dot"></div><div class="soon-point-txt">${pt}</div></div>`;
+    });
+    inner += `</div>`;
+  } else if (p.type === 'solutions') {
+    inner += `<div class="soon-two-col">
+      <div class="soon-col">
+        <div class="soon-col-title">Products</div>
+        ${p.products.map(i => `<div class="soon-col-item">${i}</div>`).join('')}
+      </div>
+      <div class="soon-col">
+        <div class="soon-col-title">Services</div>
+        ${p.services.map(i => `<div class="soon-col-item">${i}</div>`).join('')}
+      </div>
+    </div>
+    <div class="soon-closer">${p.closer}</div>`;
+  }
+
+  inner += `
+    <button class="soon-cta" onclick="joinWaitlist('${key}')">Join the Waitlist</button>
+    <button class="soon-dismiss" onclick="closeSoonSheet()">Close</button>`;
+
+  content.innerHTML = inner;
+  document.getElementById('soon-modal').classList.add('on');
+}
+
+function renderTabOpsSheet() {
+  const p = SOON_PRODUCTS.tabops;
+  const content = document.getElementById('soon-content');
+  let inner = `
+    <div class="soon-header">
+      <div class="soon-logo">${LOGOS.tabops}</div>
+      <div class="soon-title-wrap">
+        <div class="soon-title">TabOps</div>
+        <div class="soon-badge-row"><div class="soon-pill">COMING SOON</div></div>
+      </div>
+    </div>
+    <div class="soon-oneliner">${p.oneliner}</div>
+    <div class="ops-tier-label">Core Apps</div>`;
+
+  p.tier1.forEach(app => {
+    inner += `
+    <div class="ops-app-row" onclick="openAppSheet('${app.key}')">
+      <div class="ops-app-icon">${LOGOS[app.key]}</div>
+      <div class="ops-app-info">
+        <div class="ops-app-name">${app.name}</div>
+        <div class="ops-app-desc">${app.desc}</div>
+      </div>
+      <div class="ops-app-chevron">›</div>
+    </div>`;
+  });
+
+  inner += `<div class="ops-tier-label">More Coming</div>`;
+
+  p.tier2.forEach(app => {
+    inner += `
+    <div class="ops-app-row dimmed">
+      <div class="ops-app-icon">${LOGOS[app.key]}</div>
+      <div class="ops-app-info">
+        <div class="ops-app-name">${app.name}</div>
+        <div class="ops-app-desc">${app.desc}</div>
+      </div>
+      <div class="ops-soon-tag">SOON</div>
+    </div>`;
+  });
+
+  inner += `
+    <button class="soon-cta" style="margin-top:16px;" onclick="joinWaitlist('tabops')">Join the Waitlist</button>
+    <button class="soon-dismiss" onclick="closeSoonSheet()">Close</button>`;
+
+  content.innerHTML = inner;
+}
+
+function openAppSheet(key) {
+  const p = SOON_PRODUCTS.tabops;
+  const app = p.tier1.find(a => a.key === key);
+  if (!app) return;
+  const content = document.getElementById('soon-content');
+  let inner = `
+    <button class="sheet-back" onclick="renderTabOpsSheet()">‹ TabOps</button>
+    <div class="soon-header">
+      <div class="soon-logo">${LOGOS[key]}</div>
+      <div class="soon-title-wrap">
+        <div class="soon-title">${app.name}</div>
+        <div class="soon-badge-row"><div class="soon-pill">COMING SOON</div></div>
+      </div>
+    </div>
+    <div class="soon-oneliner">${app.desc}</div>
+    <div class="soon-points">`;
+  app.points.forEach(pt => {
+    inner += `<div class="soon-point"><div class="soon-point-dot"></div><div class="soon-point-txt">${pt}</div></div>`;
+  });
+  inner += `</div>
+    <button class="soon-cta" onclick="joinWaitlist('tabops')">Join the Waitlist</button>
+    <button class="soon-dismiss" onclick="closeSoonSheet()">Close</button>`;
+  content.innerHTML = inner;
+  // Scroll sheet to top
+  document.querySelector('.soon-sheet').scrollTop = 0;
+}
+
+function closeSoonSheet() {
+  document.getElementById('soon-modal').classList.remove('on');
+}
+
+function joinWaitlist(key) {
+  const name = SOON_PRODUCTS[key]?.name || key;
+  window.location.href = `mailto:hello@cybertabx.com?subject=Waitlist: ${name}&body=I'd like to join the waitlist for ${name}.`;
+}
+
+/* ══ SHARE ══ */
+function shareTabX() {
+  const url = 'https://app.cybertabx.com?ref=invite';
+  const shareData = {
+    title:'TabSpace by CyberTabX',
+    text:'Tab into your world — finance, news, and more in one platform.',
+    url,
+  };
+  const btn = document.getElementById('invite-btn-txt');
+
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {
+      // Share dismissed or failed — copy as fallback
+      copyInviteLink(btn, url);
+    });
+  } else {
+    copyInviteLink(btn, url);
+  }
+}
+
+function copyInviteLink(btn, url) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      btn.textContent = 'Link copied!';
+      setTimeout(() => { btn.textContent = 'Invite to TabX'; }, 2200);
+    }).catch(() => {
+      btn.textContent = 'Link copied!';
+      setTimeout(() => { btn.textContent = 'Invite to TabX'; }, 2200);
+    });
+  } else {
+    // Final fallback — prompt
+    window.prompt('Copy this link to share TabSpace:', url);
+  }
+}
+
+/* ══ FEEDBACK ══ */
+function showFeedback() {
+  document.getElementById('feedback-modal').classList.add('on');
+  setTimeout(() => document.getElementById('feedback-text').focus(), 400);
+}
+function hideFeedback() { document.getElementById('feedback-modal').classList.remove('on'); }
+function sendFeedback() {
+  const text = document.getElementById('feedback-text').value.trim();
+  if (!text) return;
+  window.location.href = `mailto:hello@cybertabx.com?subject=TabX Feedback&body=${encodeURIComponent(text)}`;
+  hideFeedback();
+  document.getElementById('feedback-text').value = '';
+}
+
+/* ══ NAV BAR ══ */
+function renderBar(key) {
+  const wrap = document.getElementById('nav-wrap');
+  wrap.innerHTML = '';
+  const app = APPS[key];
+  if (key === 'home' || !app.nav || !app.nav.length) {
+    ['tabfin','tabnews'].forEach(k => {
+      const a = APPS[k];
+      const el = document.createElement('div');
+      el.className = 'home-ql';
+      el.innerHTML = `<div class="ql-logo">${a.logo}</div><div class="ql-lbl">${a.name}</div>`;
+      el.onclick = () => switchTo(k);
+      wrap.appendChild(el);
+    });
+  } else {
+    app.nav.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = 'ni' + (i === 0 ? ' active' : '');
+      el.innerHTML = `<div class="ni-icon">${item.icon}</div><div class="ni-lbl">${item.label}</div><div class="ni-dot"></div>`;
+      el.onclick = () => {
+        document.querySelectorAll('.ni').forEach(e => e.classList.remove('active'));
+        el.classList.add('active');
+      };
+      wrap.appendChild(el);
+    });
+  }
+}
+
+/* ══ SWITCHER PANEL ══ */
+function renderPanel() {
+  const list = document.getElementById('sw-list');
+  list.innerHTML = '';
+  document.getElementById('swh-cur').textContent = APPS[cur].name;
+
+  // On home — show only TabFin + TabNews (not TabSpace itself)
+  // Inside a product — show TabSpace + other products
+  const keys = cur === 'home'
+    ? ['tabfin','tabnews']
+    : ['home','tabfin','tabnews'].filter(k => k !== cur).concat([cur]);
+
+  // Sort: always home first if present, then live apps
+  const ordered = cur === 'home'
+    ? ['tabfin','tabnews']
+    : ['home', ...['tabfin','tabnews'].filter(k => k !== cur)];
+
+  ordered.forEach((key, i) => {
+    const app = APPS[key];
+    const isActive = cur === key;
+    const el = document.createElement('div');
+    el.className = 'sw-row' + (isActive ? ' sw-on' : '');
+    const badgeHtml = app.badge === 'live' ? `<div class="sw-badge live">LIVE</div>` : '';
+    el.innerHTML = `
+      <div class="sw-ico-wrap">${app.logo}</div>
+      <div class="sw-info"><div class="sw-name">${app.name}</div></div>
+      ${badgeHtml}`;
+    el.onclick = () => switchTo(key);
+    list.appendChild(el);
+  });
+}
+
+/* ══ SWITCH ══ */
+function switchTo(key) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('s-' + key).classList.remove('hidden');
+  cur = key;
+  if (key !== 'home' && !localStorage.getItem('ctx_first_used')) {
+    localStorage.setItem('ctx_first_used', '1');
+    checkInstallCard();
+  }
+  renderBar(key);
+  renderPanel();
+  closePanel();
+}
+
+function togglePanel() { panelOpen ? closePanel() : openPanel(); }
+function openPanel() {
+  panelOpen = true;
+  renderPanel();
+  document.getElementById('hub-btn').classList.add('open');
+  document.getElementById('sw-panel').classList.add('on');
+  document.getElementById('sw-backdrop').classList.add('on');
+}
+function closePanel() {
+  panelOpen = false;
+  document.getElementById('hub-btn').classList.remove('open');
+  document.getElementById('sw-panel').classList.remove('on');
+  document.getElementById('sw-backdrop').classList.remove('on');
+}
+
+/* ══ INJECT LOGOS ══ */
+function injectCardLogos() {
+  const map = {
+    'card-logo-tabfin':LOGOS.tabfin,
+    'card-logo-tabnews':LOGOS.tabnews,
+    'card-logo-tabarena':LOGOS.tabarena,
+    'card-logo-tabpulse':LOGOS.tabpulse,
+    'card-logo-tabops':LOGOS.tabops,
+    'card-logo-tabsolutions':LOGOS.tabsolutions,
+  };
+  Object.entries(map).forEach(([id,svg]) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = svg;
+  });
+}
+
+/* ══ INIT ══ */
+function init() {
+  initSplash();
+  checkInvite();
+  injectCardLogos();
+  renderBar('home');
+  renderPanel();
+  checkInstallCard();
+}
+
+init();
+</script>
+</body>
+</html>
