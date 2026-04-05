@@ -19,6 +19,7 @@
   --bar-h:49px; --hub-w:58px;
   --spring:cubic-bezier(0.34,1.4,0.64,1);
   --out:cubic-bezier(0.4,0,0.2,1);
+  --safe-bottom-h:env(safe-area-inset-bottom, 0px);
 }
 html,body { width:100%; height:100%; height:100dvh; overflow:hidden; background:var(--dark); font-family:'Inter',sans-serif; color:#fff; }
 
@@ -261,7 +262,7 @@ html,body { width:100%; height:100%; height:100dvh; overflow:hidden; background:
 
 
 /* ══ SAFE AREA BOTTOM ══ */
-#safe-bottom { flex:0 0 env(safe-area-inset-bottom, 0px); min-height:0; background:#08090e; width:100%; }
+#safe-bottom { flex:0 0 0px; min-height:0; background:#08090e; width:100%; transition:flex-basis 0s; }
 /* ══ INSTALL MODAL ══ */
 #install-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
 #install-modal.on { opacity:1; pointer-events:all; }
@@ -804,8 +805,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 function checkInstallCard() {
   if (isStandalone) return;
-  if (!localStorage.getItem('ctx_first_used')) return;
-  document.getElementById('install-card').classList.remove('hidden');
+  setTimeout(() => {
+    document.getElementById('install-card').classList.remove('hidden');
+  }, 3000);
 }
 
 function showInstallModal() {
@@ -1123,6 +1125,19 @@ function injectCardLogos() {
   });
 }
 
+/* ══ SAFE BOTTOM ══ */
+function initSafeBottom() {
+  const el = document.getElementById('safe-bottom');
+  if (!el) return;
+  // Try CSS env() first
+  const cssVal = parseInt(getComputedStyle(document.documentElement)
+    .getPropertyValue('--safe-bottom-h') || '0');
+  // iOS browser detection fallback — iPhone X and later have 34px home indicator
+  const isIphoneX = isIOS && window.screen.height >= 812;
+  const h = cssVal > 0 ? cssVal : (isIphoneX && !isStandalone ? 34 : 0);
+  el.style.flexBasis = h + 'px';
+}
+
 /* ══ INIT ══ */
 function init() {
   initSplash();
@@ -1131,6 +1146,7 @@ function init() {
   renderBar('home');
   renderPanel();
   checkInstallCard();
+  initSafeBottom();
 }
 
 init();
