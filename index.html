@@ -16,11 +16,11 @@
 }
 :root {
   --navy:#1a1a2e; --blue:#4f8ef7; --teal:#0ff4c6; --dark:#0c0e1a;
-  --bar-h:calc(49px + env(safe-area-inset-bottom, 0px)); --hub-w:58px;
+  --bar-h:49px; --hub-w:58px;
   --spring:cubic-bezier(0.34,1.4,0.64,1);
   --out:cubic-bezier(0.4,0,0.2,1);
 }
-html,body { width:100%; height:100%; overflow:hidden; background:var(--dark); font-family:'Inter',sans-serif; color:#fff; }
+html,body { width:100%; height:100%; height:100dvh; overflow:hidden; background:var(--dark); font-family:'Inter',sans-serif; color:#fff; }
 
 /* ══ SPLASH ══ */
 #splash {
@@ -38,7 +38,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:var(--dark); fo
 @keyframes wordIn { to { opacity:1; transform:translateY(0); } }
 
 /* ══ SHELL ══ */
-#shell { width:100%; height:100%; display:flex; flex-direction:column; overflow:hidden; position:relative; }
+#shell { width:100%; height:100%; height:100dvh; display:flex; flex-direction:column; overflow:hidden; position:relative; }
 #screens { flex:1; position:relative; overflow:hidden; min-height:0; }
 .screen { position:absolute; inset:0; display:flex; flex-direction:column; transition:opacity 0.26s var(--out), transform 0.26s var(--out); }
 .screen.hidden { opacity:0; pointer-events:none; transform:scale(0.97) translateY(4px); }
@@ -232,7 +232,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:var(--dark); fo
 @keyframes swin { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
 
 /* ══ BOTTOM BAR ══ */
-#bar { flex:0 0 var(--bar-h); width:100%; background:rgba(8,9,18,0.98); border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:flex-start; padding-top:4px; padding-left:6px; padding-right:6px; padding-bottom:env(safe-area-inset-bottom, 4px); position:relative; z-index:50; }
+#bar { flex:0 0 var(--bar-h); width:100%; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:flex-start; padding:4px 6px 0; position:relative; z-index:50; }
 .hub-slot { flex:0 0 var(--hub-w); display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:3px; flex-shrink:0; position:relative; z-index:2; padding-top:3px; }
 .hub-btn { width:36px; height:36px; border-radius:11px; background:rgba(15,244,198,0.07); border:1px solid rgba(15,244,198,0.2); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease, transform 0.15s var(--spring); flex-shrink:0; position:relative; overflow:hidden; }
 .hub-btn:active { transform:scale(0.87); }
@@ -259,6 +259,9 @@ html,body { width:100%; height:100%; overflow:hidden; background:var(--dark); fo
 .home-ql:active { background:rgba(255,255,255,0.05); }
 .ql-lbl { font-size:9px; font-weight:600; color:rgba(255,255,255,0.28); letter-spacing:0.3px; }
 
+
+/* ══ SAFE AREA BOTTOM ══ */
+#safe-bottom { flex:0 0 env(safe-area-inset-bottom, 0px); min-height:0; background:#08090e; width:100%; }
 /* ══ INSTALL MODAL ══ */
 #install-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
 #install-modal.on { opacity:1; pointer-events:all; }
@@ -607,7 +610,9 @@ html,body { width:100%; height:100%; overflow:hidden; background:var(--dark); fo
     </div>
     <div class="bar-sep"></div>
     <div id="nav-wrap" style="display:contents"></div>
-  </div>
+  </div><!-- /bar -->
+
+  <div id="safe-bottom"></div>
 
 </div><!-- /shell -->
 
