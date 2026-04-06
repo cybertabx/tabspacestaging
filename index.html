@@ -38,7 +38,7 @@ html, body { margin:0; padding:0; background:#08090e; font-family:'Inter',sans-s
 @keyframes wordIn { to { opacity:1; transform:translateY(0); } }
 
 /* ══ SHELL ══ */
-#shell { min-height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:#08090e; }
+#shell { height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:#08090e; }
 #screens { flex:1; position:relative; overflow:hidden; min-height:0; }
 .screen { position:absolute; inset:0; display:flex; flex-direction:column; transition:opacity 0.26s var(--out), transform 0.26s var(--out); }
 .screen.hidden { opacity:0; pointer-events:none; transform:scale(0.97) translateY(4px); }
