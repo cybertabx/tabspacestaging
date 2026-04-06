@@ -20,7 +20,7 @@
   --spring:cubic-bezier(0.34,1.4,0.64,1);
   --out:cubic-bezier(0.4,0,0.2,1);
 }
-html, body { margin:0; padding:0; overflow:hidden; background:#08090e; font-family:'Inter',sans-serif; color:#fff; }
+html, body { margin:0; padding:0; background:#08090e; font-family:'Inter',sans-serif; color:#fff; }
 
 /* ══ SPLASH ══ */
 #splash {
@@ -1148,6 +1148,14 @@ function injectCardLogos() {
 }
 
 /* ══ INIT ══ */
+function forceRepaint() {
+  // Force iOS Safari to repaint — fixes compositing gap on first load
+  var shell = document.getElementById('shell');
+  shell.style.display = 'none';
+  shell.offsetHeight; // trigger reflow
+  shell.style.display = '';
+}
+
 function init() {
   initSplash();
   checkInvite();
@@ -1155,6 +1163,12 @@ function init() {
   renderBar('home');
   renderPanel();
   checkInstallCard();
+  // Force repaint after fonts load to fix iOS paint gap
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(forceRepaint);
+  } else {
+    setTimeout(forceRepaint, 100);
+  }
 }
 
 init();
