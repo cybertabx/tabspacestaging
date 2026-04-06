@@ -17,12 +17,10 @@
 :root {
   --navy:#1a1a2e; --blue:#4f8ef7; --teal:#0ff4c6; --dark:#0c0e1a;
   --bar-h:49px; --hub-w:58px;
-  --safe-b:0px;
   --spring:cubic-bezier(0.34,1.4,0.64,1);
   --out:cubic-bezier(0.4,0,0.2,1);
 }
-html { width:100%; height:100%; background:#08090e; }
-body { width:100%; height:100%; overflow:hidden; background:#08090e; font-family:'Inter',sans-serif; color:#fff; }
+html, body { margin:0; padding:0; background:#08090e; font-family:'Inter',sans-serif; color:#fff; }
 
 /* ══ SPLASH ══ */
 #splash {
@@ -40,8 +38,8 @@ body { width:100%; height:100%; overflow:hidden; background:#08090e; font-family
 @keyframes wordIn { to { opacity:1; transform:translateY(0); } }
 
 /* ══ SHELL ══ */
-#shell { position:fixed; top:0; left:0; right:0; bottom:0; overflow:hidden; }
-#screens { position:absolute; top:0; left:0; right:0; bottom:49px; overflow:hidden; }
+#shell { min-height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:#08090e; }
+#screens { flex:1; position:relative; overflow:hidden; min-height:0; }
 .screen { position:absolute; inset:0; display:flex; flex-direction:column; transition:opacity 0.26s var(--out), transform 0.26s var(--out); }
 .screen.hidden { opacity:0; pointer-events:none; transform:scale(0.97) translateY(4px); }
 
@@ -234,7 +232,7 @@ body { width:100%; height:100%; overflow:hidden; background:#08090e; font-family
 @keyframes swin { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
 
 /* ══ BOTTOM BAR ══ */
-#bar { position:fixed; bottom:0; left:0; right:0; height:49px; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; justify-content:flex-start; padding:0 6px; z-index:50; }
+#bar { flex-shrink:0; width:100%; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; justify-content:flex-start; padding:8px 6px 20px; z-index:50; }
 .hub-slot { flex:0 0 var(--hub-w); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; position:relative; z-index:2; }
 .hub-btn { width:36px; height:36px; border-radius:11px; background:rgba(15,244,198,0.07); border:1px solid rgba(15,244,198,0.2); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease, transform 0.15s var(--spring); flex-shrink:0; position:relative; overflow:hidden; }
 .hub-btn:active { transform:scale(0.87); }
@@ -262,8 +260,7 @@ body { width:100%; height:100%; overflow:hidden; background:#08090e; font-family
 .ql-lbl { font-size:9px; font-weight:600; color:rgba(255,255,255,0.28); letter-spacing:0.3px; }
 
 
-/* ══ SAFE AREA BOTTOM ══ */
-#safe-bottom { display:none; }
+
 /* ══ INSTALL MODAL ══ */
 #install-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
 #install-modal.on { opacity:1; pointer-events:all; }
@@ -351,16 +348,6 @@ body { width:100%; height:100%; overflow:hidden; background:#08090e; font-family
 .feedback-send:active { opacity:0.85; }
 .feedback-close { width:100%; padding:11px; background:transparent; border:none; font-size:12px; color:rgba(255,255,255,0.3); cursor:pointer; }
 </style>
-<script>
-(function(){
-  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(!isIOS)return;
-  // All iPhones since X (2017) have home indicator — safe to always apply
-  // iPhone 8/SE with physical button: screen.height <= 667pts
-  var h=window.screen.height;
-  window._safeB=(h>667)?34:0;
-})();
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>eruda.init();</script>
@@ -626,20 +613,7 @@ body { width:100%; height:100%; overflow:hidden; background:#08090e; font-family
     <div class="bar-sep"></div>
     <div id="nav-wrap" style="display:contents"></div>
   </div><!-- /bar -->
-<script>
-(function(){
-  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(!isIOS)return;
-  var safe=window.screen.height>=812?34:0;
-  if(!safe)return;
-  var bar=document.getElementById('bar');
-  var sc=document.getElementById('screens');
-  if(bar){bar.style.height=(49+safe)+'px';bar.style.alignItems='flex-start';bar.style.paddingTop='8px';}
-  if(sc){sc.style.bottom=(49+safe)+'px';}
-})();
-</script>
 
-  <div id="safe-bottom"></div>
 
 </div><!-- /shell -->
 
