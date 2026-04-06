@@ -233,7 +233,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
 @keyframes swin { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
 
 /* ══ BOTTOM BAR ══ */
-#bar { flex:0 0 var(--bar-h); width:100%; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; justify-content:flex-start; padding:0 6px; z-index:50; }
+#bar { flex:0 0 auto; width:100%; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:flex-start; justify-content:flex-start; padding:6px 6px 0; z-index:50; min-height:var(--bar-h); }
 .hub-slot { flex:0 0 var(--hub-w); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; position:relative; z-index:2; }
 .hub-btn { width:36px; height:36px; border-radius:11px; background:rgba(15,244,198,0.07); border:1px solid rgba(15,244,198,0.2); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease, transform 0.15s var(--spring); flex-shrink:0; position:relative; overflow:hidden; }
 .hub-btn:active { transform:scale(0.87); }
@@ -262,7 +262,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
 
 
 /* ══ SAFE AREA BOTTOM ══ */
-#safe-bottom { flex:0 0 var(--safe-b); background:#08090e; width:100%; }
+#safe-bottom { display:none; }
 /* ══ INSTALL MODAL ══ */
 #install-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
 #install-modal.on { opacity:1; pointer-events:all; }
@@ -367,8 +367,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
   if(safeB>0){
     document.documentElement.style.setProperty('--safe-b',safeB+'px');
     document.addEventListener('DOMContentLoaded',function(){
-      var sb=document.getElementById('safe-bottom');
-      if(sb)sb.style.height=safeB+'px';
+      var bar=document.getElementById('bar');
+      if(bar)bar.style.paddingBottom=safeB+'px';
     });
   }
 })();
