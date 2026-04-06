@@ -39,8 +39,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
 @keyframes wordIn { to { opacity:1; transform:translateY(0); } }
 
 /* ══ SHELL ══ */
-#shell { position:fixed; top:0; left:0; right:0; bottom:0; display:flex; flex-direction:column; overflow:hidden; background:#08090e; }
-#screens { flex:1; position:relative; overflow:hidden; min-height:0; }
+#shell { position:fixed; top:0; left:0; right:0; bottom:0; overflow:hidden; }
+#screens { position:absolute; top:0; left:0; right:0; bottom:49px; overflow:hidden; }
 .screen { position:absolute; inset:0; display:flex; flex-direction:column; transition:opacity 0.26s var(--out), transform 0.26s var(--out); }
 .screen.hidden { opacity:0; pointer-events:none; transform:scale(0.97) translateY(4px); }
 
@@ -233,7 +233,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
 @keyframes swin { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
 
 /* ══ BOTTOM BAR ══ */
-#bar { flex:0 0 var(--bar-h); width:100%; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; justify-content:flex-start; padding:0 6px; z-index:50; }
+#bar { position:fixed; bottom:0; left:0; right:0; height:49px; background:#08090e; border-top:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; justify-content:flex-start; padding:0 6px; z-index:50; }
 .hub-slot { flex:0 0 var(--hub-w); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; position:relative; z-index:2; }
 .hub-btn { width:36px; height:36px; border-radius:11px; background:rgba(15,244,198,0.07); border:1px solid rgba(15,244,198,0.2); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease, transform 0.15s var(--spring); flex-shrink:0; position:relative; overflow:hidden; }
 .hub-btn:active { transform:scale(0.87); }
@@ -262,7 +262,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
 
 
 /* ══ SAFE AREA BOTTOM ══ */
-#safe-bottom { width:100%; flex-shrink:0; background:#08090e; }
+#safe-bottom { display:none; }
 /* ══ INSTALL MODAL ══ */
 #install-modal { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
 #install-modal.on { opacity:1; pointer-events:all; }
@@ -350,26 +350,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
 .feedback-send:active { opacity:0.85; }
 .feedback-close { width:100%; padding:11px; background:transparent; border:none; font-size:12px; color:rgba(255,255,255,0.3); cursor:pointer; }
 </style>
-<script>
-(function(){
-  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(!isIOS)return;
-  var t=document.createElement('div');
-  t.style.cssText='position:fixed;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;';
-  document.documentElement.appendChild(t);
-  var envVal=parseInt(window.getComputedStyle(t).paddingBottom)||0;
-  document.documentElement.removeChild(t);
-  var safeB=envVal>0?envVal:0;
-  if(safeB===0){
-    var h=window.screen.height;
-    if(h>=812)safeB=34;
-  }
-  if(safeB>0){
-    window._safeB=safeB;
-    document.documentElement.style.setProperty('--safe-b',safeB+'px');
-  }
-})();
-</script>
+
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>eruda.init();</script>
 </head>
@@ -635,7 +616,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); f
     <div id="nav-wrap" style="display:contents"></div>
   </div><!-- /bar -->
 
-  <div id="safe-bottom"></div><script>(function(){var h=window._safeB||0;if(h>0){var e=document.getElementById("safe-bottom");e.style.height=h+"px";}})()</script>
+  <div id="safe-bottom"></div>
 
 </div><!-- /shell -->
 
