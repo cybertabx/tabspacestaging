@@ -38,7 +38,7 @@ html, body { margin:0; padding:0; background:#08090e; font-family:'Inter',sans-s
 @keyframes wordIn { to { opacity:1; transform:translateY(0); } }
 
 /* ══ SHELL ══ */
-#shell { height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:#08090e; }
+#shell { height:100vh; display:flex; flex-direction:column; overflow:hidden; background:#08090e; }
 #screens { flex:1; position:relative; overflow:hidden; min-height:0; }
 .screen { position:absolute; inset:0; display:flex; flex-direction:column; transition:opacity 0.26s var(--out), transform 0.26s var(--out); }
 .screen.hidden { opacity:0; pointer-events:none; transform:scale(0.97) translateY(4px); }
@@ -353,6 +353,22 @@ html, body { margin:0; padding:0; background:#08090e; font-family:'Inter',sans-s
 <script>eruda.init();</script>
 </head>
 <body>
+<script>
+(function(){
+  function setH(){
+    var h=(window.visualViewport?window.visualViewport.height:window.innerHeight);
+    document.getElementById('shell').style.height=h+'px';
+  }
+  // Set immediately
+  document.addEventListener('DOMContentLoaded', setH);
+  // Update on resize (orientation change, keyboard, etc)
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', setH);
+  } else {
+    window.addEventListener('resize', setH);
+  }
+})();
+</script>
 
 <!-- ══ SPLASH ══ -->
 <div id="splash">
@@ -1148,14 +1164,6 @@ function injectCardLogos() {
 }
 
 /* ══ INIT ══ */
-function forceRepaint() {
-  // Force iOS Safari to repaint — fixes compositing gap on first load
-  var shell = document.getElementById('shell');
-  shell.style.display = 'none';
-  shell.offsetHeight; // trigger reflow
-  shell.style.display = '';
-}
-
 function init() {
   initSplash();
   checkInvite();
@@ -1163,12 +1171,6 @@ function init() {
   renderBar('home');
   renderPanel();
   checkInstallCard();
-  // Force repaint after fonts load to fix iOS paint gap
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(forceRepaint);
-  } else {
-    setTimeout(forceRepaint, 100);
-  }
 }
 
 init();
